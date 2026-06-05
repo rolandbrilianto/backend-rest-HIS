@@ -7,4 +7,11 @@ const topUp = async (email, amount) => {
   return rows[0];
 };
 
-module.exports = { topUp };
+const balance = async (email) => {
+  const query = `SELECT balance FROM users WHERE email = $1`;
+  const values = [email];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
+
+module.exports = { topUp, balance };
