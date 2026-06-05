@@ -25,6 +25,7 @@ const updateProfileController = async (req, res) => {
   try {
     const email = req.user.email;
     const { first_name, last_name } = req.body;
+    validateUpdateProfile(req.body);
     const user = await editProfile(email, first_name, last_name);
     return sendResponse(res, 200, 0, "Update Profil Berhasil", user);
   } catch (error) {
