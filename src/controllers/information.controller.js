@@ -1,0 +1,13 @@
+const { getInformation } = require("../services/information.service");
+
+const { sendResponse } = require("../utils/response");
+
+const getInformationController = async (req, res) => {
+  try {
+    const information = await getInformation();
+    sendResponse(res, 200, 0, "Sukses", information);
+  } catch (error) {
+    sendResponse(res, 500, error.status, error.message || "Terjadi kesalahan");
+  }
+};
+module.exports = { getInformationController };
