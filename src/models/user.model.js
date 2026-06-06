@@ -8,7 +8,7 @@ const createUser = async (email, firstName, lastName, hashedPassword) => {
 };
 
 const findUserByEmail = async (email) => {
-  const query = `SELECT email, first_name, last_name, profile_image  FROM users WHERE email = $1`;
+  const query = `SELECT * FROM users WHERE email = $1`;
   const values = [email];
   const { rows } = await pool.query(query, values);
   return rows[0];
@@ -20,6 +20,13 @@ const findUserByEmail = async (email) => {
 //   const { rows } = await pool.query(query, values);
 //   return rows[0];
 // };
+
+const findUserProfile = async (email) => {
+  const query = `SELECT email, first_name, last_name, profile_image FROM users WHERE email = $1`;
+  const values = [email];
+  const { rows } = await pool.query(query, values);
+  return rows[0];
+};
 
 const updateProfile = async (email, firstName, lastName) => {
   const query = `UPDATE users SET first_name = $1, last_name = $2, updated_at = CURRENT_TIMESTAMP WHERE email = $3 RETURNING email, first_name, last_name, profile_image`;
@@ -40,4 +47,5 @@ module.exports = {
   //   findUserById,
   updateProfile,
   updateProfileImage,
+  findUserProfile,
 };

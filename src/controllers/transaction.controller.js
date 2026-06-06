@@ -1,4 +1,9 @@
-const { topUpBalance, getBalance } = require("../services/transaction.service");
+const {
+  topUpBalance,
+  getBalance,
+  processTransaction,
+  transactionHistory,
+} = require("../services/transaction.service");
 const { sendResponse } = require("../utils/response");
 const { validateAmount } = require("../schemas/transaction.schema");
 
@@ -35,4 +40,49 @@ const getBalanceController = async (req, res) => {
     );
   }
 };
-module.exports = { topUpController, getBalanceController };
+const transactionController = async (req, res) => {
+  try {
+    const email = req.user.email;
+    const { service_code } = req.body;
+    const result = await processTransaction(email, service_code);
+    return sendResponse(res, 200, 0, "Transaksi berhasil", result);
+  } catch (error) {
+    return sendResponse(
+      res,
+      400,
+      error.status || 102,
+      error.message || "Terjadi kesalahan",
+    );
+  }
+};
+
+const historyController = async (req, res) => {
+  try {
+    const email = req.user.email;
+    const { limit, offset = 0 } = req.query;
+    const records = await transactionHistory(
+      email,
+      limit ? parseInt(limit) : undefined,
+      parseInt(offset),
+    );
+    return sendResponse(res, 200, 0, "Get History Berhasil", {
+      offset: parseInt(offset),
+      limit: limit ? parseInt(limit) : null,
+      records,
+    });
+  } catch (error) {
+    return sendResponse(
+      res,
+      401,
+      error.status || 108,
+      error.message || "Terjadi kesalahan",
+    );
+  }
+};
+
+module.exports = {
+  topUpController,
+  getBalanceController,
+  transactionController,
+  historyController,
+};

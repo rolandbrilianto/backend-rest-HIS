@@ -1,11 +1,11 @@
 const {
-  findUserByEmail,
   updateProfileImage,
   updateProfile,
+  findUserProfile,
 } = require("../models/user.model");
 
 const getProfile = async (email) => {
-  const user = await findUserByEmail(email);
+  const user = await findUserProfile(email);
   if (!user) {
     throw { status: 108, message: "Token tidak tidak valid atau kadaluwarsa" };
   }
